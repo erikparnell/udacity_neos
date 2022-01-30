@@ -13,6 +13,9 @@ You'll edit this file in Tasks 2 and 3.
 """
 
 
+from models import NearEarthObject
+
+
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
@@ -42,9 +45,20 @@ class NEODatabase:
         self._neos = neos
         self._approaches = approaches
 
-        # TODO: What additional auxiliary data structures will be useful?
 
+        '''for approach in self._approaches:
+             neo = ... # retrieve neo through designation in the dictionary
+        # set approach.neo to neo
+        # append approach to neo.approaches'''
+        # TODO: What additional auxiliary data structures will be useful?
+        
+        
         # TODO: Link together the NEOs and their close approaches.
+        for ca in self._approaches:
+            pdes = ca[0]
+            for neo in self._neos:
+                if neo[3] == pdes:
+                    #ca.neo.append(neo)
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.

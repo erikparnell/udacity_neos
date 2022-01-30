@@ -49,14 +49,22 @@ class NearEarthObject:
         # You should coerce these values to their appropriate data type and
         # handle any edge cases, such as a empty name being represented by `None`
         # and a missing diameter being represented by `float('nan')`.
-        self.designation = designation
-        self.name = name
-        self.diameter = diameter
-        self.hazardous = hazardous
-        #self.approaches = approaches #EP how to handle?
+        self.designation = str(designation)
+        if name == '':
+            self.name = None
+        else:
+            self.name = str(name)
+        if diameter == '':
+            self.diameter = float('nan')
+        else:
+            self.diameter = float(diameter)
+        if hazardous == 'Y':
+            self.hazardous = True
+        else:
+            self.hazardous = False
 
         # Create an empty initial collection of linked approaches.
-        #self.approaches = []
+        self.approaches = []
 
     @property
     def fullname(self):
@@ -108,9 +116,9 @@ class CloseApproach:
         # You should coerce these values to their appropriate data type and handle any edge cases.
         # The `cd_to_datetime` function will be useful.
         self.time = cd_to_datetime(time)  # TODO: Use the cd_to_datetime function for this attribute.
-        self.distance = distance #float
-        self.velocity = velocity #float
-        self._designation = _designation
+        self.distance = float(distance) 
+        self.velocity = float(velocity) 
+        self._designation = str(_designation)
         # Create an attribute for the referenced NEO, originally None.
         self.neo = None #EP not input, how to handle? Call from NEO class?
 

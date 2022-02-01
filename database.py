@@ -13,6 +13,7 @@ You'll edit this file in Tasks 2 and 3.
 """
 
 
+from ast import Try
 from models import NearEarthObject
 
 
@@ -45,44 +46,23 @@ class NEODatabase:
         self._neos = neos
         self._approaches = approaches
 
-
-        '''for approach in self._approaches:
-             neo = ... # retrieve neo through designation in the dictionary
-        # set approach.neo to neo
-        # append approach to neo.approaches'''
         # TODO: What additional auxiliary data structures will be useful?
-        
-        #create list of neos represented as dicts
-        neos = []
+
+        #create 2 dicts mapping designation to neo and name to neo
+        des_to_neo = {}
+        name_to_neo = {}
         for neo_obj in self._neos:
-            neos.append({
-                'designation' : neo_obj.designation,
-                'name' : neo_obj.name,
-                'diameter' : neo_obj.diameter,
-                'hazardous' : neo_obj.hazardous
-            })
-        self._neos_dict = neos
+            des_to_neo[neo_obj.designation] = neo_obj
+            if neo_obj.name is not None:
+                name_to_neo[neo_obj.name] = neo_obj
+        self._des_to_neo = des_to_neo
+        self._name_to_neo = name_to_neo
 
-        #filter neos dict for neos with names only
-        neos_w_names_dict = []
-        neos_w_names = []
-        index = -1
-        for neo in neos:
-            index += 1
-            if neo['name'] != None:
-                neos_w_names_dict.append(neo)
-                neos_w_names.append(self._neos[index])
-        self._neos_w_names_dict = neos_w_names_dict
-        self._neos_w_names = neos_w_names
-
-        # TODO: Link together the NEOs and their close approaches.
         for ca in self._approaches:
-            index = -1
-            for neo in neos:
-                index += 1
-                if neo['designation'] == ca._designation:
-                    ca.neo = self._neos[index]
-                    self._neos[index].approaches.append(ca)
+            ca.neo = des_to_neo[ca._designation]
+            des_to_neo[ca._designation].approaches.append(ca)
+            
+            
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -98,12 +78,11 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
         # TODO: Fetch an NEO by its primary designation.
-        index = -1
-        for neo in self._neos_dict:
-            index += 1
-            if neo['designation'] == designation:
-                return self._neos[index]
-
+        try:
+            return self._des_to_neo[designation]
+        except KeyError:
+            return None
+        
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
 
@@ -119,11 +98,10 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
         # TODO: Fetch an NEO by its name.
-        index = -1
-        for neo in self._neos_w_names_dict:
-            index += 1
-            if neo['name'] == name:
-                return self._neos_w_names[index]
+        try:
+            return self._name_to_neo[name]
+        except KeyError:
+            return None
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.

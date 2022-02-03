@@ -107,11 +107,43 @@ def create_filters(
     :param diameter_max: A maximum diameter of the NEO of a matching `CloseApproach`.
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
+
     """
     # TODO: Decide how you will represent your filters.
-    return ()
+    #https://knowledge.udacity.com/questions/599130
+    #define subclasses:
+    class DateFilter(AttributeFilter):
+        @classmethod
+        def get(cls, approach):
+            return approach.time
 
+    class DistanceFilter(AttributeFilter):
+        @classmethod
+        def get(cls, approach):
+            return approach.distance
 
+    class VelocityFilter(AttributeFilter):
+        @classmethod
+        def get(cls, approach):
+            return approach.velocity
+
+    class DiameterFilter(AttributeFilter):
+        @classmethod
+        def get(cls, approach):
+            return approach.neo.diameter
+
+    class HazardousFilter(AttributeFilter):
+        @classmethod
+        def get(cls, approach):
+            return approach.neo.hazardous
+
+    #instantiate filters
+    
+
+    #return filter instances
+    return DateFilter, DistanceFilter, VelocityFilter, \
+        DiameterFilter, HazardousFilter
+    
 def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.
 

@@ -137,12 +137,53 @@ def create_filters(
         def get(cls, approach):
             return approach.neo.hazardous
 
-    #instantiate filters
+    #create empty filter list
+    filters = []
+
+    #instantiate filters and append to list
     
+    if date is not None:
+        flt_date = DateFilter(operator.eq, date)
+        filters.append(flt_date)
+
+    if start_date is not None:
+        flt_start_date = DateFilter(operator.ge, start_date)
+        filters.append(flt_start_date)
+
+    if end_date is not None:
+        flt_end_date = DateFilter(operator.le, end_date)
+        filters.append(flt_end_date)
+
+    if distance_min is not None:    
+        flt_dist_min = DistanceFilter(operator.ge, distance_min)
+        filters.append(flt_dist_min)
+
+    if distance_max is not None:
+        flt_dist_max = DistanceFilter(operator.le, distance_max)
+        filters.append(flt_dist_max)
+
+    if velocity_min is not None:    
+        flt_vel_min = VelocityFilter(operator.ge, velocity_min)
+        filters.append(flt_vel_min)
+
+    if velocity_max is not None:    
+        flt_vel_max = VelocityFilter(operator.le, velocity_max)
+        filters.append(flt_vel_max)
+
+    if diameter_min is not None:    
+        flt_diam_min = DiameterFilter(operator.ge, diameter_min)
+        filters.append(flt_diam_min)
+    
+    if diameter_max is not None:
+        flt_diam_max = DiameterFilter(operator.le, diameter_max)
+        filters.append(flt_diam_max)
+        
+    if hazardous is not None:
+        flt_hazard = HazardousFilter(operator.eq, hazardous)
+        filters.append(flt_hazard)
 
     #return filter instances
-    return DateFilter, DistanceFilter, VelocityFilter, \
-        DiameterFilter, HazardousFilter
+    return filters
     
 def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.

@@ -143,7 +143,7 @@ def create_filters(
     #instantiate filters and append to list
     
     if date is not None:
-        flt_date = DateFilter(operator.eq, date)
+        flt_date = DateFilter(operator.eq, date) #need to address date vs datetime still
         filters.append(flt_date)
 
     if start_date is not None:

@@ -121,9 +121,8 @@ class NEODatabase:
         for approach in self._approaches:
             filter_out = False
             for filter in filters:
-                if filter_out is True:
-                    break
-                if approach fails filter:
+                if not filter(approach):
                     filter_out = True
                     break
-            yield approach
+            if not filter_out:
+                yield approach

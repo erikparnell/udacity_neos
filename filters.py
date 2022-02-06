@@ -18,7 +18,6 @@ You'll edit this file in Tasks 3a and 3c.
 """
 import operator
 
-
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
 
@@ -115,7 +114,7 @@ def create_filters(
     class DateFilter(AttributeFilter):
         @classmethod
         def get(cls, approach):
-            return approach.time
+            return approach.time.date()
 
     class DistanceFilter(AttributeFilter):
         @classmethod

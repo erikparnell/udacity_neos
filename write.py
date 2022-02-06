@@ -12,7 +12,7 @@ You'll edit this file in Part 4.
 """
 import csv
 import json
-
+from helpers import datetime_to_str
 
 def write_to_csv(results, filename):
     """Write an iterable of `CloseApproach` objects to a CSV file.
@@ -29,7 +29,29 @@ def write_to_csv(results, filename):
         'designation', 'name', 'diameter_km', 'potentially_hazardous'
     )
     # TODO: Write the results to a CSV file, following the specification in the instructions.
+    with open(filename, 'w') as outfile:
+        writer = csv.DictWriter(outfile, fieldnames)
+        writer.writeheader()
+        for result in results:
 
+            if result.neo.name is None or result.neo.name == '':
+                name = ''
+            else:
+                name = str(result.neo.name)
+            if result.neo.diameter is None or result.neo.diameter == '':
+                diameter = 'nan'
+            else:
+                diameter = float(result.neo.diameter)
+
+            writer.writerow({
+                'datetime_utc' : datetime_to_str(result.time),
+                'distance_au' : float(result.distance),
+                'velocity_km_s' : float(result.velocity),
+                'designation' : str(result.neo.designation),
+                'name' : name,
+                'diameter_km' : diameter,
+                'potentially_hazardous' : bool(result.neo.hazardous)  
+            })
 
 def write_to_json(results, filename):
     """Write an iterable of `CloseApproach` objects to a JSON file.
@@ -43,3 +65,29 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    res_list = []
+    with open(filename, 'w') as outfile:
+        for result in results:
+            
+            if result.neo.name is None or result.neo.name == '':
+                name = ''
+            else:
+                name = str(result.neo.name)
+            if result.neo.diameter is None or result.neo.diameter == '':
+                diameter = 'NaN'
+            else:
+                diameter = float(result.neo.diameter)
+            
+            res_dict = {
+                'datetime_utc' : datetime_to_str(result.time),
+                'distance_au' : float(result.distance),
+                'velocity_km_s' : float(result.velocity),
+                'neo' : {
+                    'designation' : str(result.neo.designation),
+                    'name' : name,
+                    'diameter_km' : diameter,
+                    'potentially_hazardous' : bool(result.neo.hazardous)
+                }
+            }
+            res_list.append(res_dict)
+        json.dump(res_list, outfile, indent=2)
